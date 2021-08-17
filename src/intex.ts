@@ -1,1 +1,3 @@
-export const Test = (): string => 'test';
+import * as uri from './uri';
+
+export { uri };
