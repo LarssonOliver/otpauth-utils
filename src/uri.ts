@@ -29,6 +29,11 @@ const UriRegEx =
     '^otpauth://(?<type>[ht]otp)/(?:(?<issuer>[^:]*):)' +
     '?(?<account>[^:?]*)?(?:&?[^=&]+=[^=&]+)+$';
 
+/**
+ * Read and parse an OTPAuth URI.
+ * @param uri the OTPAuth URI to parse.
+ * @returns a {@link KeyUri} object containing parsed data.
+ */
 export function parseKeyUri(uri: string): KeyUri {
     const match = decodeURI(uri).match(UriRegEx);
 
