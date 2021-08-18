@@ -1,6 +1,6 @@
 {
   "name": "@larssonoliver/otpauth-utils",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "An otpauth protocol utility library.",
   "keywords": [
     "otp",
@@ -12,7 +12,7 @@
     "url": "git://github.com/LarssonOliver/otpauth-utils.git"
   },
   "publishConfig": {
-    "registry":"https://npm.pkg.github.com"
+    "registry": "https://npm.pkg.github.com"
   },
   "license": "MIT",
   "files": [
@@ -26,7 +26,7 @@
     "posttest": "npm run lint",
     "lint": "eslint '*/**/*.{js,ts}' --fix",
     "test": "jest",
-	  "prepublishOnly": "npm test && npm run build && npm version"
+    "prepublishOnly": "npm test && npm run build && npm version"
   },
   "devDependencies": {
     "@types/jest": "^27.0.1",
