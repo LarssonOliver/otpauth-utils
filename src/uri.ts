@@ -27,7 +27,7 @@ export function newKeyUri(): KeyUri {
 
 const UriRegEx =
     '^otpauth://(?<type>[ht]otp)/(?:(?<issuer>[^:]*):)' +
-    '?(?<account>[^:?]*)?(?:&?[^=&]+=[^=&]+)+$';
+    '?[ ]*(?<account>[^:?]*)?(?:&?[^=&]+=[^=&]+)+$';
 
 /**
  * Read and parse an OTPAuth URI.
@@ -35,7 +35,7 @@ const UriRegEx =
  * @returns a {@link KeyUri} object containing parsed data.
  */
 export function parseKeyUri(uri: string): KeyUri {
-    const match = decodeURI(uri).match(UriRegEx);
+    const match = decodeURIComponent(uri).match(UriRegEx);
 
     if (match === null) throw new Error('invalid input uri format');
 
@@ -106,4 +106,44 @@ export function parseKeyUri(uri: string): KeyUri {
     if (res.type === 'totp' && res.period === undefined) res.period = 30;
 
     return res;
+}
+
+/**
+ * Will convert a {@link KeyUri} object into a URI conforming to
+ * {@link https://github.com/google/google-authenticator/wiki/Key-Uri-Format}.
+ * @param obj the {@link KeyUri} object to stringify.
+ */
+export function stringifyKeyUri(obj: KeyUri): string {
+    let res = `otpauth://${obj.type}/`;
+
+    if (obj.issuer) {
+        if (obj.issuer.indexOf(':') !== -1)
+            throw new Error('issuer cannot contain ":"');
+
+        res += `${obj.issuer}:`;
+    }
+
+    if (!obj.accountName) throw new Error('accountName is required');
+    else if (obj.accountName.indexOf(':') !== -1)
+        throw new Error('accountName cannot contain ":"');
+    res += `${obj.accountName}?`;
+
+    if (!obj.secret) throw new Error('secret is required');
+    res += `secret=${obj.secret}`;
+
+    if (obj.issuer) res += `&issuer=${obj.issuer}`;
+    if (obj.algorithm && obj.algorithm !== 'SHA1')
+        res += `&algorithm=${obj.algorithm}`;
+    if (obj.digits && obj.digits !== 6) res += `&digits=${obj.digits}`;
+
+    if (obj.type === 'hotp') {
+        if (!obj.counter)
+            throw new Error('counter is required when type is hotp');
+        res += `&counter=${obj.counter}`;
+    } else if (obj.period !== undefined) {
+        if (obj.period < 1) throw new Error('period cannot be < 1');
+        else if (obj.period !== 30) res += `&period=${obj.period}`;
+    }
+
+    return encodeURI(res);
 }
