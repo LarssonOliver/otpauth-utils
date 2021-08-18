@@ -1,5 +1,5 @@
 {
-  "name": "otpauth-utils",
+  "name": "@larssonoliver/otpauth-utils",
   "version": "0.1.0",
   "description": "An otpauth protocol utility library.",
   "keywords": [
@@ -9,7 +9,10 @@
   "author": "LarssonOliver",
   "repository": {
     "type": "git",
-    "url": "https://github.com/LarssonOliver/otpauth-utils"
+    "url": "git://github.com/LarssonOliver/otpauth-utils.git"
+  },
+  "publishConfig": {
+    "registry":"https://npm.pkg.github.com"
   },
   "license": "MIT",
   "files": [
