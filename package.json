@@ -22,10 +22,10 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "coverage": "npm test --coverage",
     "posttest": "npm run lint",
     "lint": "eslint '*/**/*.{js,ts}' --fix",
     "test": "jest",
+    "coverage": "jest --coverage",
     "prepublishOnly": "npm test && npm run build && npm version"
   },
   "devDependencies": {

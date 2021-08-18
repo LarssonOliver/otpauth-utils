@@ -38,13 +38,13 @@ test('parse - totp', () => {
     const string =
         'otpauth://totp/ACME%20Co:john.doe@email.com' +
         '?secret=HXDMVJECJJWSRB3HWIZR4IFUGFTMXBOZ' +
-        '&issuer=ACME%20Co&algorithm=SHA256&digits=8&period=45';
+        '&issuer=ACME%20Co&algorithm=SHA256&digits=6&period=45';
 
     const obj: KeyUri = {
         accountName: 'john.doe@email.com',
         algorithm: 'SHA256',
         counter: undefined,
-        digits: 8,
+        digits: 6,
         issuer: 'ACME Co',
         period: 45,
         secret: 'HXDMVJECJJWSRB3HWIZR4IFUGFTMXBOZ',
@@ -151,6 +151,20 @@ test('parse - secret is required', () => {
     expect(() => parseKeyUri(string)).toThrowError();
 });
 
+test('parse - discard extra query parameters', () => {
+    const string = 'otpauth://totp/testuser?secret=ABC&test=gobble';
+
+    expect(() => parseKeyUri(string)).not.toThrowError();
+});
+
+test('parse - throw on invalid parametrs', () => {
+    const string1 = 'otpauth://totp/testuser?secret=ABC&digits=abc';
+    expect(() => parseKeyUri(string1)).toThrowError();
+
+    const string2 = 'otpauth://totp/testuser?secret=ABC&algorithm=abc';
+    expect(() => parseKeyUri(string2)).toThrowError();
+});
+
 test('stringify - invalid object throws', () => {
     expect(() => stringifyKeyUri({} as KeyUri)).toThrowError();
 });
@@ -203,6 +217,18 @@ test('stringify - encode account name', () => {
 
     obj.accountName = 'test:2';
     expect(() => stringifyKeyUri(obj)).toThrowError();
+});
+
+test('stringify - encode secret', () => {
+    const obj = {
+        accountName: 'test',
+        type: 'totp',
+    } as KeyUri;
+
+    expect(() => stringifyKeyUri(obj)).toThrowError();
+
+    obj.secret = 'TEST';
+    expect(stringifyKeyUri(obj)).toContain('secret=TEST');
 });
 
 test('stringify - encode issuer', () => {

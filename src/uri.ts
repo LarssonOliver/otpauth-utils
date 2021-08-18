@@ -37,12 +37,17 @@ const UriRegEx =
 export function parseKeyUri(uri: string): KeyUri {
     const match = decodeURIComponent(uri).match(UriRegEx);
 
-    if (match === null) throw new Error('invalid input uri format');
+    if (
+        match === null ||
+        match.groups === undefined ||
+        match.input === undefined
+    )
+        throw new Error('invalid input uri format');
 
     const res = newKeyUri();
 
     // Parse query.
-    const query = match.input?.split('?')[1] ?? '';
+    const query = match.input.split('?')[1];
     query.split('&').forEach((param) => {
         const [key, value] = param.split('=');
 
@@ -62,11 +67,13 @@ export function parseKeyUri(uri: string): KeyUri {
                     value === 'SHA512'
                 )
                     res.algorithm = value;
+                else throw new Error('algorithm invalid');
                 break;
 
             case 'digits':
                 if (+value === 6) res.digits = 6;
                 else if (+value === 8) res.digits = 8;
+                else throw new Error('digits invalid');
                 break;
 
             case 'counter':
@@ -84,22 +91,20 @@ export function parseKeyUri(uri: string): KeyUri {
 
     if (res.secret.length === 0) throw new Error('secret is required');
 
-    if (match.groups !== undefined) {
-        res.type = match.groups['type'] as 'hotp' | 'totp';
-        if (res.type === 'hotp' && res.counter === undefined)
-            throw new Error('counter cannot be undefined when type is "hotp"');
+    res.type = match.groups['type'] as 'hotp' | 'totp';
+    if (res.type === 'hotp' && res.counter === undefined)
+        throw new Error('counter cannot be undefined when type is "hotp"');
 
-        if (
-            res.issuer !== undefined &&
-            match.groups['issuer'] !== undefined &&
-            res.issuer !== match.groups['issuer']
-        )
-            throw new Error('issuer mismatch');
-        else if (match.groups['issuer'] !== undefined)
-            res.issuer = match.groups['issuer'];
+    if (
+        res.issuer !== undefined &&
+        match.groups['issuer'] !== undefined &&
+        res.issuer !== match.groups['issuer']
+    )
+        throw new Error('issuer mismatch');
+    else if (match.groups['issuer'] !== undefined)
+        res.issuer = match.groups['issuer'];
 
-        res.accountName = match.groups['account'];
-    }
+    res.accountName = match.groups['account'];
 
     if (res.algorithm === undefined) res.algorithm = 'SHA1';
     if (res.digits === undefined) res.digits = 6;
