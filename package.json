@@ -22,8 +22,11 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "lint": "eslint '*/**/*.{js,ts}' --fix --quiet",
-    "test": "jest"
+    "coverage": "npm test --coverage",
+    "posttest": "npm run lint",
+    "lint": "eslint '*/**/*.{js,ts}' --fix",
+    "test": "jest",
+	  "prepublishOnly": "npm test && npm run build && npm version"
   },
   "devDependencies": {
     "@types/jest": "^27.0.1",
