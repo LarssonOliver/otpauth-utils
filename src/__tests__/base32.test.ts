@@ -34,6 +34,11 @@ test('encode - encode no padding', () => {
     expect(base32encode(arr, false)).toEqual('AE');
 });
 
+test('encode - encode numbers', () => {
+    const arr = new Uint8Array([0xe7]);
+    expect(base32encode(arr)).toEqual('44======');
+});
+
 test('encode - encode 10 bytes', () => {
     const arr = new Uint8Array([1, 1, 1, 1, 1, 2, 2, 2, 2, 2]);
     expect(base32encode(arr)).toEqual('AEAQCAIBAIBAEAQC');
@@ -76,6 +81,12 @@ test('decode - decode no padding', () => {
 test('decode - decode 10 bytes', () => {
     const arr = new Uint8Array([1, 1, 1, 1, 1, 2, 2, 2, 2, 2]);
     expect(base32decode('AEAQCAIBAIBAEAQC')).toEqual(arr);
+});
+
+test('decode - string', () => {
+    expect(base32decode('MZXW6YTB')).toEqual(
+        new Uint8Array([0x66, 0x6f, 0x6f, 0x62, 0x61]),
+    );
 });
 
 test('decode - decode invalid throws', () => {
