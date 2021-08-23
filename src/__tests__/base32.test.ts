@@ -77,3 +77,7 @@ test('decode - decode 10 bytes', () => {
     const arr = new Uint8Array([1, 1, 1, 1, 1, 2, 2, 2, 2, 2]);
     expect(base32decode('AEAQCAIBAIBAEAQC')).toEqual(arr);
 });
+
+test('decode - decode invalid throws', () => {
+    expect(() => base32decode('ae======')).toThrowError();
+});
