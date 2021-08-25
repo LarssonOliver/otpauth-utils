@@ -68,7 +68,7 @@ test('896 bit input', () => {
 });
 
 test("1 million * 'a'", () => {
-    expect(SHA1('a'.repeat(10e6))).toEqual(
+    expect(SHA1('a'.repeat(1e6))).toEqual(
         Uint32ArrayToUint8Array(
             new Uint32Array([
                 0x34aa973c, 0xd4c4daa4, 0xf61eeb2b, 0xdbad2731, 0x6534016f,
