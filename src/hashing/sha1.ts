@@ -109,7 +109,5 @@ export function SHA1(input: string): Uint8Array {
         h4 & 0xff,
     ]);
 
-    // res.forEach((i) => console.log(i.toString(16)));
-
     return res;
 }
