@@ -77,7 +77,7 @@ test('HMAC-SHA1 - 5', () => {
 test('HMAC-SHA1 - 6', () => {
     expect(
         HMAC_SHA1(
-            hexToUint8Array('0xaa'.repeat(80)),
+            hexToUint8Array('aa'.repeat(80)),
             'Test Using Larger Than Block-Size Key - Hash Key First',
         ),
     ).toEqual(hexToUint8Array('0xaa4ae5e15272d00e95705637ce8a3b55ed402112'));
@@ -86,7 +86,7 @@ test('HMAC-SHA1 - 6', () => {
 test('HMAC-SHA1 - 7', () => {
     expect(
         HMAC_SHA1(
-            hexToUint8Array('0xaa'.repeat(80)),
+            hexToUint8Array('aa'.repeat(80)),
             'Test Using Larger Than Block-Size Key and Larger Than One Block-Size Data',
         ),
     ).toEqual(hexToUint8Array('0xe8e99d0f45237d786d6bbaa7965c7808bbff1a91'));
